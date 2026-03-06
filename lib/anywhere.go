@@ -62,9 +62,17 @@ func SearchProximity(lat, long float64, limit uint8, options ...Modifier) ([]dis
 		points = append(points, make([]distance.Point, len(devices))...)
 		for i, device := range devices {
 			points[offset+i] = distance.Point{
-				Id: device.BSSID,
-				Y:  device.Location.Lat,
-				X:  device.Location.Long,
+				Id:                 device.BSSID,
+				Y:                  device.Location.Lat,
+				X:                  device.Location.Long,
+				Alt:                device.Location.Alt,
+				HorizontalAccuracy: device.Location.HorizontalAccuracy,
+				VerticalAccuracy:   device.Location.VerticalAccuracy,
+				Speed:              device.Location.Speed,
+				Course:             device.Location.Course,
+				Timestamp:          device.Location.Timestamp,
+				Floor:              device.Location.Floor,
+				Source:             "Apple",
 			}
 		}
 		newClosest := distance.Closest(target, points)

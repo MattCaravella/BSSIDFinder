@@ -97,18 +97,24 @@ func QueryBssid(bssids []string, maxResults int32, options ...Modifier) ([]AP, e
 	resp := make([]AP, len(block.GetWifiDevices()))
 	i := 0
 	for _, d := range block.GetWifiDevices() {
-		long := CoordFromInt(d.GetLocation().GetLongitude(), -8)
-		lat := CoordFromInt(d.GetLocation().GetLatitude(), -8)
-		alt := CoordFromInt(d.GetLocation().GetAltitude(), -8)
+		loc := d.GetLocation()
+		long := CoordFromInt(loc.GetLongitude(), -8)
+		lat := CoordFromInt(loc.GetLatitude(), -8)
 		if long == -180 && lat == -180 {
 			continue
 		}
 		resp[i] = AP{
 			BSSID: d.GetBssid(),
 			Location: Location{
-				Long: long,
-				Lat:  lat,
-				Alt:  alt,
+				Long:               long,
+				Lat:                lat,
+				Alt:                CoordFromInt(loc.GetAltitude(), -8),
+				HorizontalAccuracy: CoordFromInt(loc.GetHorizontalAccuracy(), -8),
+				VerticalAccuracy:   CoordFromInt(loc.GetVerticalAccuracy(), -8),
+				Speed:              CoordFromInt(loc.GetSpeed(), -8),
+				Course:             CoordFromInt(loc.GetCourse(), -8),
+				Timestamp:          loc.GetTimestamp(),
+				Floor:              loc.GetFloor(),
 			},
 		}
 		i++

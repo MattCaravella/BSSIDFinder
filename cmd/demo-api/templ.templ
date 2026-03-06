@@ -20,13 +20,259 @@ templ Index(lat, long float64, china bool) {
         padding: 0;
       }
       #map {
-        height: 80vh;
+        height: 65vh;
+      }
+      #results-container {
+        height: 35vh;
+        overflow-y: auto;
+        padding: 0 10px;
+      }
+      #results-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: monospace;
+        font-size: 13px;
+      }
+      #results-table th, #results-table td {
+        border: 1px solid #ddd;
+        padding: 4px 8px;
+        text-align: left;
+        white-space: nowrap;
+      }
+      #results-table th {
+        background: #333;
+        color: #fff;
+        position: sticky;
+        top: 0;
+      }
+      #results-table tr:nth-child(even) {
+        background: #f5f5f5;
+      }
+      #results-count {
+        padding: 6px 10px;
+        font-family: sans-serif;
+        font-size: 14px;
+        color: #555;
+      }
+      #search-box {
+        position: absolute;
+        top: 10px;
+        left: 55px;
+        z-index: 1000;
+        display: flex;
+        gap: 4px;
+      }
+      #search-input {
+        width: 300px;
+        padding: 8px 12px;
+        font-size: 14px;
+        border: 2px solid rgba(0,0,0,0.2);
+        border-radius: 4px;
+        outline: none;
+        background: white;
+      }
+      #search-input:focus {
+        border-color: #2196F3;
+      }
+      #search-btn {
+        padding: 8px 14px;
+        font-size: 14px;
+        border: 2px solid rgba(0,0,0,0.2);
+        border-radius: 4px;
+        background: white;
+        cursor: pointer;
+      }
+      #search-btn:hover {
+        background: #f0f0f0;
+      }
+      .hotlist-row td {
+        color: #e53935 !important;
+        font-weight: bold !important;
+      }
+      #hotlist-box {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+      }
+      #hotlist-input {
+        flex: 1;
+        padding: 4px 8px;
+        font-family: monospace;
+        font-size: 13px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+      }
+      #hotlist-box label {
+        font-family: sans-serif;
+        font-size: 13px;
+        font-weight: bold;
+        white-space: nowrap;
+      }
+      #clear-results {
+        padding: 4px 12px;
+        font-size: 13px;
+        cursor: pointer;
+      }
+      #history-btn {
+        position: absolute;
+        top: 10px;
+        right: 55px;
+        z-index: 1000;
+        padding: 8px 14px;
+        font-size: 14px;
+        border: 2px solid rgba(0,0,0,0.2);
+        border-radius: 4px;
+        background: white;
+        cursor: pointer;
+      }
+      #history-btn:hover { background: #f0f0f0; }
+      #history-panel {
+        display: none;
+        position: absolute;
+        top: 50px;
+        right: 55px;
+        z-index: 1001;
+        width: 360px;
+        max-height: 50vh;
+        overflow-y: auto;
+        background: white;
+        border: 2px solid rgba(0,0,0,0.2);
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        font-family: sans-serif;
+        font-size: 13px;
+      }
+      #history-panel .history-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        border-bottom: 1px solid #ddd;
+        font-weight: bold;
+        font-size: 14px;
+      }
+      #history-panel .history-clear {
+        font-size: 12px;
+        color: #e53935;
+        cursor: pointer;
+        border: none;
+        background: none;
+      }
+      #history-list { list-style: none; margin: 0; padding: 0; }
+      #history-list li {
+        padding: 8px 12px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+      }
+      #history-list li:hover { background: #f0f0f0; }
+      #history-list li .hist-time { color: #888; font-size: 11px; }
+      #history-list li .hist-loc { font-family: monospace; }
+      #history-list li .hist-count { color: #555; }
+      .history-empty { padding: 16px 12px; color: #999; text-align: center; }
+      #wigle-box {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        flex-wrap: wrap;
+      }
+      #wigle-box label {
+        font-family: sans-serif;
+        font-size: 13px;
+        font-weight: bold;
+        white-space: nowrap;
+      }
+      .wigle-input {
+        padding: 4px 8px;
+        font-family: monospace;
+        font-size: 13px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        width: 200px;
+      }
+      .wigle-search-input {
+        padding: 4px 8px;
+        font-family: monospace;
+        font-size: 13px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        width: 160px;
+      }
+      .wigle-search-btn {
+        padding: 4px 10px;
+        font-size: 12px;
+        cursor: pointer;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        background: #f5f5f5;
+      }
+      .wigle-search-btn:hover { background: #e0e0e0; }
+      .wigle-sep {
+        border-left: 1px solid #ccc;
+        height: 20px;
+        margin: 0 4px;
       }
     </style>
 			<title>Interactive WLOC Demo</title>
 		</head>
 		<body>
-			<div id="map"></div>
+			<div id="map">
+				<div id="search-box">
+					<input id="search-input" type="text" placeholder="Address or lat, long"/>
+					<button id="search-btn">Go</button>
+				</div>
+				<button id="history-btn">History</button>
+				<div id="history-panel">
+					<div class="history-header">
+						<span>Search History</span>
+						<button class="history-clear" id="history-clear-btn">Clear All</button>
+					</div>
+					<ul id="history-list"></ul>
+				</div>
+			</div>
+			<div id="results-container">
+				<div id="hotlist-box">
+					<label>Hotlist:</label>
+					<input id="hotlist-input" type="text" placeholder="AA:BB:CC:DD:EE:FF, 11:22:33:44:55:66, ..."/>
+				</div>
+				<div id="wigle-box">
+					<label>WiGLE:</label>
+					<input id="wigle-api-name" class="wigle-input" type="text" placeholder="API Name"/>
+					<input id="wigle-api-token" class="wigle-input" type="password" placeholder="API Token"/>
+					<div class="wigle-sep"></div>
+					<input id="wigle-ssid-search" class="wigle-search-input" type="text" placeholder="Search SSID"/>
+					<button id="wigle-ssid-btn" class="wigle-search-btn">Search</button>
+					<div class="wigle-sep"></div>
+					<input id="wigle-bssid-search" class="wigle-search-input" type="text" placeholder="Search BSSID"/>
+					<button id="wigle-bssid-btn" class="wigle-search-btn">Search</button>
+				</div>
+				<div style="display:flex;align-items:center;gap:10px;">
+					<div id="results-count"></div>
+					<button id="download-csv" style="display:none;padding:4px 12px;font-size:13px;cursor:pointer;">Download CSV</button>
+					<button id="clear-results" style="display:none;">Clear Results</button>
+				</div>
+				<table id="results-table">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>Source</th>
+							<th>BSSID (MAC)</th>
+							<th>SSID</th>
+							<th>Latitude</th>
+							<th>Longitude</th>
+							<th>Altitude</th>
+							<th>H. Accuracy</th>
+							<th>V. Accuracy</th>
+							<th>Speed</th>
+							<th>Course</th>
+							<th>Timestamp</th>
+							<th>Floor</th>
+						</tr>
+					</thead>
+					<tbody id="results-body"></tbody>
+				</table>
+			</div>
 			<div id="long" data-name={ fmt.Sprintf("%f", long) }></div>
 			<div id="lat" data-name={ fmt.Sprintf("%f", lat) }></div>
 			<div id="china" data-name={ fmt.Sprintf("%t", china) }></div>

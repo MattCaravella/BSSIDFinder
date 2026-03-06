@@ -18,5 +18,13 @@ type TowerInfo struct {
 }
 
 type Location struct {
-	Long, Lat, Alt float64
+	Long               float64
+	Lat                float64
+	Alt                float64
+	HorizontalAccuracy float64
+	VerticalAccuracy   float64
+	Speed              float64
+	Course             float64
+	Timestamp          int64
+	Floor              int64
 }
