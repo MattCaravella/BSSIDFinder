@@ -56,29 +56,37 @@ if (china == "true") {
     .setView([lat, long], 5)
     .addLayer(baiduLayer);
 } else {
-  var darkMatter = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-    maxZoom: 20,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
-    subdomains: "abcd",
-  });
+  // Esri's gray canvas basemaps need no API key. Each one is a base layer
+  // plus a separate "Reference" overlay that carries the place-name labels.
+  var esriAttribution = 'Tiles &copy; <a href="https://www.esri.com/">Esri</a> &mdash; Esri, HERE, Garmin, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, and the GIS user community';
+  function esriCanvas(service) {
+    return L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/" + service + "/MapServer/tile/{z}/{y}/{x}", {
+      maxNativeZoom: 16,
+      maxZoom: 19,
+      attribution: esriAttribution,
+    });
+  }
+  var darkGray = L.layerGroup([
+    esriCanvas("World_Dark_Gray_Base"),
+    esriCanvas("World_Dark_Gray_Reference"),
+  ]);
   var osmStandard = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   });
-  var positron = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-    maxZoom: 20,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
-    subdomains: "abcd",
-  });
+  var lightGray = L.layerGroup([
+    esriCanvas("World_Light_Gray_Base"),
+    esriCanvas("World_Light_Gray_Reference"),
+  ]);
   var topoMap = L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
     maxZoom: 17,
     attribution: '&copy; <a href="https://opentopomap.org">OpenTopoMap</a>',
   });
-  map = L.map("map", {}).setView([lat, long], 5).addLayer(darkMatter);
+  map = L.map("map", {}).setView([lat, long], 5).addLayer(darkGray);
   L.control.layers({
-    "Dark": darkMatter,
+    "Dark": darkGray,
     "Standard": osmStandard,
-    "Light": positron,
+    "Light": lightGray,
     "Topo": topoMap,
   }, null, { position: "topright" }).addTo(map);
 }
