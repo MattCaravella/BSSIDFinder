@@ -7,7 +7,7 @@ Built on top of [acheong08/apple-corelocation-experiments](https://github.com/ac
 ## Features
 
 - **Dual-source lookups** — Queries Apple's WLOC API and WiGLE simultaneously for maximum coverage
-- **Interactive map** — Dark, light, standard, and topo tile layers via Leaflet.js
+- **Interactive map** — Dark and light (Esri gray canvas), standard (OpenStreetMap), and topo (OpenTopoMap) tile layers via Leaflet.js; none need an API key
 - **SSID search** — Search WiGLE's global database by network name (supports wildcards)
 - **BSSID search** — Look up a specific MAC address across WiGLE
 - **Address/coordinate search** — Jump to any location by address or lat/long via Nominatim geocoding
